@@ -1,12 +1,11 @@
-from genes import Genes
 import torch
 import torch.nn as nn
 import torch.optim as optim
 
 class Individual(nn.Module):
-    def __init__(self, isClassifier, inputSize, outputSize, genes=Genes.random()):
+    def __init__(self, isClassifier, inputSize, outputSize, gene_class, genes=None):
         super().__init__()
-        
+        self.genes = gene_class.random() if genes is None else genes
         # CREATE MODEL FOR NEURAL NETWORK TO TRAIN
         layers = []
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
