@@ -2,6 +2,7 @@ from population import Population
 from data_preprocessing import Dataset
 from genes import Genes
 
+genes_template = []
 
 populationSize = 100
 numEpochsPerIndividual = 100
