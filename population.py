@@ -20,6 +20,14 @@ class Population:
         bestIndividualIndex = self.population_fitness.index(min(self.population_fitness))
         return self.population[bestIndividualIndex]
     def iteratePopulation(self):
+        #method: (inspired from paper)
+        # - take top X% fittest individuals into new population
+        # - breed top X% fittest individuals to make 2*X% new individuals
+        # - randomly select from non-top X% fittest individuals to fill up new population until it reaches appropriate size
+        # this is different from the paper because:
+        # - the paper breeds all individuals together, not just the most fit
+        # - the paper selects the top X% individuals from the previous population, then fills the rest in with children + parents after mutation
+        
         # select top X% performing individuals as parents
         num_individuals_to_crossover = int(self.populationPortionToCrossover*len(self.population))
         if num_individuals_to_crossover % 2 != 0: num_individuals_to_crossover -= 1
@@ -57,14 +65,16 @@ class Population:
             while len(new_population_genes) < len(self.population):
                 random_individual_i = random.randint(0,len(self.population)-1)
                 if random_individual_i not in individuals_kept:
+                    individuals_kept.append(random_new_gene_i)
                     new_population_genes.append(self.population[random_individual_i].genes)
 
-         # apply mutation to new population genes to create new population
+         # apply mutation to new population genes
         new_population = []
         for new_gene in new_population_genes:
             mutated_gene = self.gene_class.mutate(new_gene)
             new_population.append(Individual(self.dataset.isClassification, self.dataset.inputSize, self.dataset.outputSize, self.gene_class, mutated_gene))
 
+        # delete old population and save new population
         for _ in range(len(self.population)): del self.population.pop(0)
         self.population = new_population
         self.population_fitness = [0]*len(self.population)

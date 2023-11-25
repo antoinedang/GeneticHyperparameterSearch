@@ -22,8 +22,12 @@ class Individual(nn.Module):
         self.model = self.model.to(self.device)
         self.criterion = nn.CrossEntropyLoss() if isClassifier else nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.genes["learning_rate"])
-        
+    def reset_model_weights(self):
+        for layer in self.model.children():
+            if hasattr(layer, 'reset_parameters'):
+                layer.reset_parameters()
     def train(self, num_epochs, train_input, train_output, test_input, test_output):
+        # self.reset_model_weights()
         input_batches = torch.split(train_input, self.genes["learning_rate"])
         output_batches = torch.split(train_output, self.genes["learning_rate"])
         self.model.train()
