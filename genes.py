@@ -44,15 +44,12 @@ class Genes:
 
         # HIDDEN_LAYERS
         if (self.template.get('hidden_layers', False) and (specific_gene==None or specific_gene==1)):
-            size_layers = random.randint(3, 9)
             hidden_layers = []
-            reduce_size = int(number_layers/2)
 
             for i in range(number_layers):
-                if i <= reduce_size:
-                    hidden_layers.append(2**(size_layers))
-                else:
-                    hidden_layers.append(2**(size_layers -1))
+                size_layers = random.randint(2, 7)
+                hidden_layers.append(2**(size_layers))
+
         else:
             hidden_layers = [128, 128, 64]     # DEFAULT
 
@@ -94,9 +91,6 @@ class Genes:
 
         child1 = copy_gen1[:middle] + copy_gen2[middle:]
         child2 = copy_gen2[:middle] + copy_gen1[middle:]
-
-        print(child1)
-        print(child2)
 
         return [self.normalize_genotype(child1), self.normalize_genotype(child2)]
 
