@@ -1,6 +1,7 @@
 import random
+import copy
 
-GENE_TEMPLATES = [
+GENOTYPE_TEMPLATES = [
     # GENE 0:
     {'learning_rate': True, 
      'hidden_layers': True, 
@@ -13,9 +14,10 @@ GENE_TEMPLATES = [
 
 class Genes:
 
-    def __init__(self, template_number, mutation_prob = 80):
-        self.template = GENE_TEMPLATES[template_number]
+    def __init__(self, template_number, mutation_prob = 60, dominant_gene =1):
+        self.template = GENOTYPE_TEMPLATES[template_number]
         self.mutation_prob = mutation_prob
+        self.dominant_gene = dominant_gene
 
         self.active_genes = []
         i=0
@@ -24,18 +26,24 @@ class Genes:
                 self.active_genes.append(i)
             i+=1
 
+
     # This function creates the genes of a new individual at random
-    def random(self, specific_gene = None):
+    def random(self, specific_gene = None, number_layers_p = None):
+
+        # The number of layers is defined for the whole NN
+        if number_layers_p == None:
+            number_layers = random.randint(2, 7)
+        else:
+            number_layers = number_layers_p
 
         # LEARNING_RATE
         if (self.template.get('learning_rate', False) and (specific_gene==None or specific_gene==0)):
-            learning_rate = random.uniform(0.0001, 0.3)
+            learning_rate = random.uniform(0, 0.2)
         else:
             learning_rate = 0.01    # DEFAULT
 
         # HIDDEN_LAYERS
         if (self.template.get('hidden_layers', False) and (specific_gene==None or specific_gene==1)):
-            number_layers = random.randint(2, 6)
             size_layers = random.randint(3, 9)
             hidden_layers = []
             reduce_size = int(number_layers/2)
@@ -57,34 +65,37 @@ class Genes:
 
         # DROPOUT
         if (self.template.get('dropout', False) and (specific_gene==None or specific_gene==3)):
-            dropout = random.choice([True, False])
+            dropout = []
+            for i in range(number_layers):
+                dropout.append(random.uniform(0, 1))
         else:
-            dropout = False     # DEFAULT IS NO DROPOUT
+            dropout = [0, 0, 0]     # DEFAULT IS NO DROPOUT
 
         # ACTIVATION
         if (self.template.get('activation', False) and (specific_gene==None or specific_gene==4)):
-            activation = random.choice(["linear", "relu", "leaky_relu", "softplus"])
+            activation = []
+            for i in range(number_layers):
+                activation.append(random.choice(["linear", "relu", "leaky_relu", "softplus"]))
         else:
-            activation = "linear"
+            activation = ["linear", "linear", "linear"]
+
 
         return [learning_rate, hidden_layers, batch_size, dropout, activation]
 
+
+
     # Handles the crossing over of genes
-    def crossover(self, individual_pack1, individual_pack2): # takes 2 tuples as inputs : tuple = (gene, fitness_score)
+    def crossover(self, genotype1, genotype2): # takes 2 tuples as inputs : tuple = (genotype, fitness_score)
 
-        genes1, fitness1 = individual_pack1
-        genes2, fitness2 = individual_pack2
+        middle = random.randint(1, len(genotype1)-1)
 
-        # Probability of selecting individual1 is based on its fitness score 
-        # => stronger individuals have a bigger prob of passing over their genes to the next generation
-        prob = fitness1 / (fitness1 + fitness2)
+        copy_gen1 = copy.deepcopy(genotype1)
+        copy_gen2 = copy.deepcopy(genotype2)
 
-        rand = random.uniform(0,1)
+        child1 = copy_gen1[:middle] + copy_gen2[middle:]
+        child2 = copy_gen2[:middle] + copy_gen2[middle:]
 
-        if rand <= prob:
-            return genes1
-        else:
-            return genes2
+        return [self.normalize_genotype(child1), self.normalize_genotype(child2)]
 
 
     # Handles the mutation of genes, this is done in a probabilistic manner
@@ -92,7 +103,7 @@ class Genes:
 
         # We cannot mutate more than half the genes at once
         # Assumption: an individual with more than half its genes mutated is not the same individual
-        number_mutated_genes = random.randint(0, int(len(self.active_genes)/2)) 
+        number_mutated_genes = random.randint(1, int(len(self.active_genes)/2)) 
         mutated_individual= individual[:]
 
         for i in range(number_mutated_genes):
@@ -113,5 +124,27 @@ class Genes:
         return mutated_individual
 
 
+    def normalize_genotype(self, genotype):
 
-        
+        number_layers = len(genotype[self.dominant_gene])
+
+        for g in range (len(genotype)):
+
+            if type(genotype[g]) == list:
+                temp_number_layers = len(genotype[g])
+                
+                if temp_number_layers > 1 and g!= self.dominant_gene:
+                    
+                    if temp_number_layers > number_layers:
+                        genotype[g] = genotype[g][:number_layers]
+
+                    else:
+                        x = number_layers - temp_number_layers
+                        for i in range (x):
+                            genotype[g].append(genotype[g][len(genotype[g])-1])
+
+        return genotype
+
+
+c = Genes(0)
+print(c.normalize_genotype([1, [22, 33, 44, 55], [22, 6, 9, 0, 3, 7, 43], [1223, 432]]))
