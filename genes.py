@@ -93,18 +93,21 @@ class Genes:
         copy_gen2 = copy.deepcopy(genotype2)
 
         child1 = copy_gen1[:middle] + copy_gen2[middle:]
-        child2 = copy_gen2[:middle] + copy_gen2[middle:]
+        child2 = copy_gen2[:middle] + copy_gen1[middle:]
+
+        print(child1)
+        print(child2)
 
         return [self.normalize_genotype(child1), self.normalize_genotype(child2)]
 
 
     # Handles the mutation of genes, this is done in a probabilistic manner
-    def mutate(self, individual):
+    def mutate(self, genotype):
 
         # We cannot mutate more than half the genes at once
         # Assumption: an individual with more than half its genes mutated is not the same individual
-        number_mutated_genes = random.randint(1, int(len(self.active_genes)/2)) 
-        mutated_individual= individual[:]
+        number_mutated_genes = random.randint(0, int(len(self.active_genes)/2)) 
+        mutated_individual= genotype[:]
 
         for i in range(number_mutated_genes):
 
@@ -115,7 +118,7 @@ class Genes:
                 gene_number = random.choice(self.active_genes)
 
                 # Generate a random gene to replace the gene at the selected position
-                temp_gene = self.random(gene_number)
+                temp_gene = self.random(gene_number, len(genotype))
 
                 # Update the old gene with the generated gene
                 mutated_individual[gene_number] = temp_gene[gene_number]
@@ -145,6 +148,6 @@ class Genes:
 
         return genotype
 
-
+# Testing 
 c = Genes(0)
-print(c.normalize_genotype([1, [22, 33, 44, 55], [22, 6, 9, 0, 3, 7, 43], [1223, 432]]))
+print(c.random())
