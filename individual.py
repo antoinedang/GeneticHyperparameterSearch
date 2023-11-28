@@ -65,14 +65,15 @@ class Individual(nn.Module):
             self.model.eval()
             with torch.no_grad():
                 expected_test_output = self.model(test_input.to(self.device))
-                try:
-                    test_loss = self.criterion(torch.squeeze(expected_test_output), test_output.to(self.device)).cpu().numpy()
-                except:
-                    continue
                 if self.isClassifier: # use inverted f1 score as loss
                     predictions = (F.sigmoid(expected_test_output) >= 0.5).float()
                     test_loss = 1.0 - f1_score(test_output.to(self.device).cpu().numpy(), torch.squeeze(predictions).cpu().numpy(), average='weighted')
-
+                else:
+                    try:
+                        test_loss = self.criterion(torch.squeeze(expected_test_output), test_output.to(self.device)).cpu().numpy()
+                    except:
+                        continue
+            print(test_loss)
             if test_loss < min_test_loss:
                 min_test_loss = test_loss
                 min_test_loss_epoch = e

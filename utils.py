@@ -11,10 +11,10 @@ def loadFromPickle(filename):
         return pickle.load(file)
 
 def appendToFile(filename, text):
-    with open(filename, 'a') as f:
+    with open(filename + ".csv", 'a') as f:
         f.write(text + '\n')
 
 def writeToFile(filename, text):
-    with open(filename, 'w') as f:
+    with open(filename + ".csv", 'w') as f:
         f.write(text + '\n')
         

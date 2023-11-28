@@ -135,7 +135,8 @@ class Genes:
 
         # We cannot mutate more than half the genes at once
         # Assumption: an individual with more than half its genes mutated is not the same individual
-        number_mutated_genes = random.randint(0, int(len(self.active_genes)/2)) 
+        if int(len(self.active_genes)/2) < 1: return genotype
+        number_mutated_genes = random.randint(1, int(len(self.active_genes)/2)) 
         mutated_individual= genotype[:]
         mutated = False
         
@@ -144,7 +145,6 @@ class Genes:
             for i in range(number_mutated_genes):
 
                 rand = random.uniform(0,1)
-
                 # Apply mutation if the random number is less than or equal to the specified mutation probability
                 if rand <= float(self.mutation_prob/100):
                     mutated = True
