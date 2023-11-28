@@ -138,23 +138,23 @@ class Genes:
         number_mutated_genes = random.randint(0, int(len(self.active_genes)/2)) 
         mutated_individual= genotype[:]
         mutated = False
+        
+        while not mutated:
 
-        for i in range(number_mutated_genes):
+            for i in range(number_mutated_genes):
 
-            rand = random.uniform(0,1)
+                rand = random.uniform(0,1)
 
-            # Apply mutation if the random number is less than or equal to the specified mutation probability
-            if rand <= float(self.mutation_prob/100):
-                mutated = True
-                gene_number = random.choice(self.active_genes)
+                # Apply mutation if the random number is less than or equal to the specified mutation probability
+                if rand <= float(self.mutation_prob/100):
+                    mutated = True
+                    gene_number = random.choice(self.active_genes)
 
-                # Generate a random gene to replace the gene at the selected position
-                temp_gene = self.random(gene_number, len(genotype[self.dominant_gene]))
+                    # Generate a random gene to replace the gene at the selected position
+                    temp_gene = self.random(gene_number, len(genotype[self.dominant_gene]))
 
-                # Update the old gene with the generated gene
-                mutated_individual[gene_number] = temp_gene[gene_number]
-
-        if not mutated: return self.mutate(genotype) # guarantee at least one mutation
+                    # Update the old gene with the generated gene
+                    mutated_individual[gene_number] = temp_gene[gene_number]
 
         return mutated_individual
 
