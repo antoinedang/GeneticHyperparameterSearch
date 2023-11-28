@@ -58,13 +58,8 @@ class Genes:
             hidden_layers = []
 
             for i in range(number_layers):
-<<<<<<< HEAD
-                size_layers = random.randint(2, 7)
-                hidden_layers.append(2**(size_layers))
-=======
                 size = random.randint(2, 7)
                 hidden_layers.append(size)
->>>>>>> 5c190065457cd9af8f9df0d44a8728d7c437af8e
 
         else:
             hidden_layers = [7]*(number_layers_p-1)     # DEFAULT (128s followed by a 64)
