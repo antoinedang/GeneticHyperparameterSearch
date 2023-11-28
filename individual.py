@@ -65,6 +65,6 @@ class Individual(nn.Module):
             if self.target_loss > test_loss:
                 break
             
-        if self.optimization == "loss": return test_loss
-        else: return min_test_loss_epoch if min_test_loss <= self.target_loss else 99999
+        if self.optimization == "loss": return -test_loss
+        else: return -min_test_loss_epoch if min_test_loss <= self.target_loss else -99999
         

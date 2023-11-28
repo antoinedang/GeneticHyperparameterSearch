@@ -55,7 +55,7 @@ class Dataset:
         with open('data/housing.csv', 'r') as credit_data:
             lines = credit_data.readlines()[1:] # ignore first line
             for line in lines:
-                price,area,bedrooms,bathrooms,stories,mainroad,guestroom,basement,hotwaterheating,airconditioning,parking,prefarea,furnishingstatus = line.split(",")[1:]
+                price,area,bedrooms,bathrooms,stories,mainroad,guestroom,basement,hotwaterheating,airconditioning,parking,prefarea,furnishingstatus = line.split(",")
                 
                 mainroad = 0 if mainroad == "no" else 1
                 guestroom = 0 if guestroom == "no" else 1

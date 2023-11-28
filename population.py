@@ -19,10 +19,10 @@ class Population:
         for i in range(len(self.population)):
             print("Training models... {}%                        ".format(100*(i+1)/len(self.population)), end='\r')
             self.population_fitness[i] = self.population[i].getFitness(self.maxEpochsPerIndividual, self.dataset.train_input, self.dataset.train_output, self.dataset.test_input, self.dataset.test_output)
-        return min(self.population_fitness)
+        return max(self.population_fitness)
     
     def getOptimalIndividual(self):
-        bestIndividualIndex = self.population_fitness.index(min(self.population_fitness))
+        bestIndividualIndex = self.population_fitness.index(max(self.population_fitness))
         return self.population[bestIndividualIndex]
     
     def iteratePopulation(self):
@@ -39,7 +39,7 @@ class Population:
         
         # select top X% performing individuals to be in new population
         num_individuals_to_keep = int(self.populationElitismProportion*len(self.population))
-        individuals_to_keep = np.argsort(self.population_fitness)[:num_individuals_to_keep]
+        individuals_to_keep = np.argsort(self.population_fitness)[-num_individuals_to_keep:]
         
         # initialize new population genes
         new_population_genes = []
