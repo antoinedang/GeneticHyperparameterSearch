@@ -2,21 +2,24 @@ from population import Population
 from data_preprocessing import Dataset
 from genes import Genes
 
-genes_template = []
-
-populationSize = 100
+populationSize = 10
 populationElitismProportion = 0.25
-dataset = Dataset('path/to/dataset/folder/or/something')
+dataset_type = "diabetes" # hardness housing credit
+dataset = Dataset(dataset_type)
 maxEpochsPerIndividual = 100
-gene_class = Genes(genes_template)
+gene_class = Genes(0, mutation_prob = 60, dominant_gene = 1)
 optimization = "loss" # "convergence speed"
 target_loss = 0.001 # training stops after this loss is reached (or after maxEpochsPerIndividual have passed)
 target_convergence_speed = 100 # number of epochs
 
 population = Population(populationSize, dataset, maxEpochsPerIndividual, populationElitismProportion, optimization, target_loss, gene_class)
 
-while (population.evaluatePopulation() > target_convergence_speed and optimization == "convergence speed") or (population.evaluatePopulation() > target_loss and optimization == "loss"):
+population_fitness = population.evaluatePopulation()
+
+while (population_fitness > target_convergence_speed and optimization == "convergence speed") or (population_fitness > target_loss and optimization == "loss"):
+    print(population_fitness, "                       ")
     population.iteratePopulation()
+    population_fitness = population.evaluatePopulation()
 
 print("Population converged!")
 print("Optimal genes: {}".format(population.getOptimalIndividual().genes))

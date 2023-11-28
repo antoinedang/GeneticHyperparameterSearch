@@ -1,4 +1,4 @@
-import random
+import torch
 from individual import Individual
 import numpy as np
 
@@ -17,6 +17,7 @@ class Population:
     
     def evaluatePopulation(self):
         for i in range(len(self.population)):
+            print("Training models... {}%                        ".format(100*(i+1)/len(self.population)), end='\r')
             self.population_fitness[i] = self.population[i].getFitness(self.maxEpochsPerIndividual, self.dataset.train_input, self.dataset.train_output, self.dataset.test_input, self.dataset.test_output)
         return min(self.population_fitness)
     
@@ -41,35 +42,36 @@ class Population:
         individuals_to_keep = np.argsort(self.population_fitness)[:num_individuals_to_keep]
         
         # initialize new population genes
-        new_population_genes = [].extend(individuals_to_keep)
+        new_population_genes = []
+        new_population_genes.extend([self.population[i].genes for i in individuals_to_keep])
 
         # breed random parents until new population is big enough
         while len(new_population_genes) < len(self.population):
-            np_fitnesses = np.array(self.population_fitness)
+            np_fitnesses = np.array(self.population_fitness) * -1 # times -1 because better fitnesses are smaller
             np_normalized_fitnesses = np_fitnesses - np.min(np_fitnesses) # make values start at 0
             np_normalized_fitnesses = np_normalized_fitnesses / np.sum(np_normalized_fitnesses) # make all values add up to 1
-            np_normalized_fitnesses = 1.0 - np_normalized_fitnesses # invert probabilities since lower fitnesses are better
             
             # Randomly select two indices based on probabilities proportional to fitnesses
             i1 = np.random.choice(len(np_normalized_fitnesses), p=np_normalized_fitnesses)
             i2 = np.random.choice(len(np_normalized_fitnesses), p=np_normalized_fitnesses)
             if i1 != i2: # parent cannot breed with itself, do not make children
                 parent_1 = self.population[i1]
-                parent_1_score = self.population_fitness[i1]
                 parent_2 = self.population[i2]
-                parent_2_score = self.population_fitness[i2]
                 # add 2 children to new population as a result of parent1 and parent2 breeding
-                children_genes = self.gene_class.crossover(parent_1.genes, parent_1_score, parent_2.genes, parent_2_score)
-                children_genes = [self.gene_class.mutate(child) for child in children_genes]
-                new_population_genes.extend(children_genes)
+                child1_genes, child2_genes = self.gene_class.crossover(parent_1.genes,parent_2.genes)
+                child1_genes = self.gene_class.mutate(child1_genes)
+                child2_genes = self.gene_class.mutate(child2_genes)
+                new_population_genes.append(child1_genes)
+                new_population_genes.append(child2_genes)
 
-         # instantiate phenotypes of new population genes
+        self.population = []
+        torch.cuda.empty_cache()
+        # instantiate phenotypes of new population genes
         new_population = []
         for new_gene in new_population_genes:
             new_population.append(Individual(self.dataset.isClassification, self.dataset.inputSize, self.dataset.outputSize, self.optimization, self.target_loss, self.gene_class, new_gene))
 
         # delete old population and save new population
-        for _ in range(len(self.population)): del self.population.pop(0)
         self.population = new_population
         self.population_fitness = [0]*len(self.population)
         

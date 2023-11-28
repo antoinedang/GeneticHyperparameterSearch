@@ -14,7 +14,7 @@ GENOTYPE_TEMPLATES = [
 
 class Genes:
 
-    def __init__(self, template_number, mutation_prob = 60, dominant_gene =1):
+    def __init__(self, template_number, mutation_prob = 60, dominant_gene = 1):
         self.template = GENOTYPE_TEMPLATES[template_number]
         self.mutation_prob = mutation_prob
         self.dominant_gene = dominant_gene
@@ -26,6 +26,17 @@ class Genes:
                 self.active_genes.append(i)
             i+=1
 
+    def getGene(self, string, genes):
+        if string == "learning_rate":
+            return genes[0]
+        elif string == "hidden_layers":
+            return genes[1]
+        elif string == "batch_size":
+            return genes[2]
+        elif string == "dropout":
+            return genes[3]
+        elif string == "activation":
+            return genes[4]
 
     # This function creates the genes of a new individual at random
     def random(self, specific_gene = None, number_layers_p = None):
@@ -44,32 +55,30 @@ class Genes:
 
         # HIDDEN_LAYERS
         if (self.template.get('hidden_layers', False) and (specific_gene==None or specific_gene==1)):
-            size_layers = random.randint(3, 9)
             hidden_layers = []
-            reduce_size = int(number_layers/2)
 
             for i in range(number_layers):
-                if i <= reduce_size:
-                    hidden_layers.append(2**(size_layers))
-                else:
-                    hidden_layers.append(2**(size_layers -1))
+                size = random.randint(2, 7)
+                hidden_layers.append(size)
+
         else:
-            hidden_layers = [128, 128, 64]     # DEFAULT
+            hidden_layers = [7]*(number_layers_p-1)     # DEFAULT (128s followed by a 64)
+            hidden_layers.append(6)
 
         # BATCH_SIZE
         if (self.template.get('batch_size', False) and (specific_gene==None or specific_gene==2)):
             batch_power = random.randint(3,9)
             batch_size = 2**batch_power
         else:
-            batch_size = 2**6   # DEFAULT
+            batch_size = 64     # DEFAULT
 
         # DROPOUT
         if (self.template.get('dropout', False) and (specific_gene==None or specific_gene==3)):
             dropout = []
             for i in range(number_layers):
-                dropout.append(random.uniform(0, 1))
+                dropout.append(random.uniform(0, 1.0))
         else:
-            dropout = [0, 0, 0]     # DEFAULT IS NO DROPOUT
+            dropout = [0]*number_layers_p     # DEFAULT IS NO DROPOUT
 
         # ACTIVATION
         if (self.template.get('activation', False) and (specific_gene==None or specific_gene==4)):
@@ -77,7 +86,7 @@ class Genes:
             for i in range(number_layers):
                 activation.append(random.choice(["linear", "relu", "leaky_relu", "softplus"]))
         else:
-            activation = ["linear", "linear", "linear"]
+            activation = ["linear"]*number_layers_p
 
 
         return [learning_rate, hidden_layers, batch_size, dropout, activation]
@@ -94,9 +103,6 @@ class Genes:
 
         child1 = copy_gen1[:middle] + copy_gen2[middle:]
         child2 = copy_gen2[:middle] + copy_gen1[middle:]
-
-        print(child1)
-        print(child2)
 
         return [self.normalize_genotype(child1), self.normalize_genotype(child2)]
 
@@ -118,7 +124,7 @@ class Genes:
                 gene_number = random.choice(self.active_genes)
 
                 # Generate a random gene to replace the gene at the selected position
-                temp_gene = self.random(gene_number, len(genotype))
+                temp_gene = self.random(gene_number, len(genotype[self.dominant_gene]))
 
                 # Update the old gene with the generated gene
                 mutated_individual[gene_number] = temp_gene[gene_number]
@@ -147,7 +153,3 @@ class Genes:
                             genotype[g].append(genotype[g][len(genotype[g])-1])
 
         return genotype
-
-# Testing 
-c = Genes(0)
-print(c.random())
