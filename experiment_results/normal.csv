@@ -1,2 +1,3 @@
-PARAMS: {'dataset': 'diabetes', 'dominant_gene': 1, 'genome_type': 2, 'mutation_p': 10, 'pop_size': 50, 'elitism_portion': 0.2, 'fitness_loss_weight': 150, 'fitness_epoch_count_weight': 1}
+PARAMS: {'dataset': 'housing', 'dominant_gene': 1, 'genome_type': 0, 'mutation_p': 10, 'pop_size': 50, 'elitism_portion': 0.2, 'fitness_loss_weight': 150, 'fitness_epoch_count_weight': 1}
 evolutionary_step,best_fitness,min_loss,convergence_time,best_genotype
+0,0.007516272195664216,0.0008997140103019774,1,[0.0686067064798776, [2, 7, 5, 4, 3], 8, [0.012214589339874765, 0.03727204927289101, 0.0021069198960963543, 0.020217957997051762, 0.04151993668920876], ['relu', 'softplus', 'softplus', 'relu', 'relu'], 0.9778391090893872]
