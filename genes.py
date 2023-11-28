@@ -7,19 +7,29 @@ GENOTYPE_TEMPLATES = [
      'hidden_layers': True, 
      'batch_size': True,
      'dropout': True,
-     'activation': True},
+     'activation': True,
+     'learning_rate_decay': True},
 
      # GENE 1
      {'learning_rate': True, 
      'hidden_layers': True, 
      'batch_size': True,
      'dropout': False,
-     'activation': True},
+     'activation': True,
+     'learning_rate_decay': True},
+     
+     # GENE 2
+     {'learning_rate': True, 
+     'hidden_layers': True, 
+     'batch_size': True,
+     'dropout': False,
+     'activation': True,
+     'learning_rate_decay': False}
 ]
 
 class Genes:
 
-    def __init__(self, template_number, mutation_prob = 60, dominant_gene = 1):
+    def __init__(self, template_number, mutation_prob, dominant_gene):
         self.template = GENOTYPE_TEMPLATES[template_number]
         self.mutation_prob = mutation_prob
         self.dominant_gene = dominant_gene
@@ -42,19 +52,21 @@ class Genes:
             return genes[3]
         elif string == "activation":
             return genes[4]
+        elif string == "learning_rate_decay":
+            return genes[5]
 
     # This function creates the genes of a new individual at random
     def random(self, specific_gene = None, number_layers_p = None):
 
         # The number of layers is defined for the whole NN
         if number_layers_p == None:
-            number_layers = random.randint(2, 7)
+            number_layers = random.randint(1, 7)
         else:
             number_layers = number_layers_p
 
         # LEARNING_RATE
         if (self.template.get('learning_rate', False) and (specific_gene==None or specific_gene==0)):
-            learning_rate = random.uniform(0, 0.2)
+            learning_rate = random.uniform(0.0001, 0.5)
         else:
             learning_rate = 0.01    # DEFAULT
 
@@ -72,7 +84,7 @@ class Genes:
 
         # BATCH_SIZE
         if (self.template.get('batch_size', False) and (specific_gene==None or specific_gene==2)):
-            batch_power = random.randint(3,9)
+            batch_power = random.randint(2,9)
             batch_size = 2**batch_power
         else:
             batch_size = 64     # DEFAULT
@@ -93,8 +105,14 @@ class Genes:
         else:
             activation = ["linear"]*number_layers
 
+        # LEARNING_RATE_DECAY
+        if (self.template.get('learning_rate_decay', False) and (specific_gene==None or specific_gene==5)):
+            learning_rate_decay = random.uniform(0.8, 1.0)
+        else:
+            learning_rate_decay = 0.9    # DEFAULT
 
-        return [learning_rate, hidden_layers, batch_size, dropout, activation]
+
+        return [learning_rate, hidden_layers, batch_size, dropout, activation, learning_rate_decay]
 
 
 
@@ -150,7 +168,7 @@ class Genes:
             if type(genotype[g]) == list:
                 temp_number_layers = len(genotype[g])
                 
-                if temp_number_layers > 1 and g!= self.dominant_gene:
+                if g != self.dominant_gene:
                     
                     if temp_number_layers > number_layers:
                         genotype[g] = genotype[g][:number_layers]

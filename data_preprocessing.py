@@ -38,6 +38,10 @@ class Dataset:
         if not self.isClassification:
             self.train_output = F.normalize(torch.from_numpy(np_output_data[train_indices]).type(torch.float32), p=2, dim=0)
             self.test_output = F.normalize(torch.from_numpy(np_output_data[test_indices]).type(torch.float32), p=2, dim=0)
+        else:
+            self.train_output = torch.from_numpy(np_output_data[train_indices]).type(torch.float32)
+            self.test_output = torch.from_numpy(np_output_data[test_indices]).type(torch.float32)
+            
             
     def getCreditData(self):
         input_data = []

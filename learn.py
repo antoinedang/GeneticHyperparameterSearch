@@ -5,18 +5,18 @@ from utils import *
 
 # EVOLUTIONARY PARAMETERS
 populationSize = 50
-populationElitismProportion = 0.35
-dataset_type = "housing" # diabetes hardness housing credit
-mutation_prob = 2 # %
+populationElitismProportion = 0.20
+dataset_type = "diabetes" # diabetes hardness housing credit
+mutation_prob = 10 # %
 dominant_gene = 1
 genome_type = 1
-fitness_loss_weight = 1 # how much testing loss contributes to the fitness of a phenotype
-fitness_epoch_count_weight = 0 # how much convergence time (in epochs) contributes to the fitness of a phenotype
+fitness_loss_weight = 150 # how much testing loss contributes to the fitness of a phenotype
+fitness_epoch_count_weight = 1 # how much convergence time (in epochs) contributes to the fitness of a phenotype
 
 # EARLY STOPPING PARAMS
 maxEpochsPerIndividual = 10000
 max_patience = 50 # number of epochs with no loss improvement after which we stop training an individual
-max_evolutionary_patience = 10
+max_evolutionary_patience = 20
 max_evolutionary_steps = 100
 
 experiment_name = "normal.csv"
@@ -37,16 +37,16 @@ current_evolutionary_patience = 0
 stopped_early = False
 
 while num_evolutionary_steps < max_evolutionary_steps and current_evolutionary_patience <= max_evolutionary_patience:
-    print("Iteration {}:".format(num_evolutionary_steps), population_fitness, "                       ")
+    print("Iteration {}: Loss {} Convergence Time {} Fitness {}".format(num_evolutionary_steps, population.getOptimalIndividual().min_test_loss, population.getOptimalIndividual().time_to_convergence, population_fitness), "                       ")
     print("Iteration {} optimal genes: {}           ".format(num_evolutionary_steps, population.getOptimalIndividual().genes))
-    num_evolutionary_steps += 1
     
     if save_experiment_results:
-        info = "{},{},{}".format(num_evolutionary_steps, population_fitness, population.getOptimalIndividual().genes)
+        info = "{},{},{},{},{}".format(num_evolutionary_steps, population_fitness, population.getOptimalIndividual().min_test_loss, population.getOptimalIndividual().time_to_convergence, population.getOptimalIndividual().genes)
         appendToFile("experiment_results/" + experiment_name, info)
         
+    
     # EARLY STOPPING UPDATE PATIENCE
-    if population_fitness <= best_population_fitness:
+    if population_fitness < best_population_fitness:
         best_population_fitness = population_fitness
         best_population_genotype = population.getOptimalIndividual().genes
         current_evolutionary_patience = 0
@@ -56,6 +56,7 @@ while num_evolutionary_steps < max_evolutionary_steps and current_evolutionary_p
     # ITERATE POPULATION
     population.iteratePopulation()
     population_fitness = abs(population.evaluatePopulation())
+    num_evolutionary_steps += 1
 
 
 if num_evolutionary_steps < max_evolutionary_steps:
@@ -65,4 +66,9 @@ else:
     
 print("Optimal genes: {}           ".format(best_population_genotype))
 print("Optimal fitness: {}                 ".format(best_population_fitness))
+
+
+appendToFile("experiment_results/" + experiment_name, "\nEVOLUTION ENDED\n")
+appendToFile("experiment_results/" + experiment_name, "Optimal genes: {}           ".format(best_population_genotype))
+appendToFile("experiment_results/" + experiment_name, "Optimal fitness: {}                 ".format(best_population_fitness))
     

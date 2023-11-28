@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torch.optim.lr_scheduler import LambdaLR
 
 class Individual(nn.Module):
     def __init__(self, isClassifier, inputSize, outputSize, gene_class, genes=None):
@@ -27,8 +28,15 @@ class Individual(nn.Module):
         
         self.model = nn.Sequential(*layers)  
         self.model = self.model.to(self.device)
+            
+        # initialize all model weights with 1s (for reproducibility)
+        for param in self.model.parameters():
+            param.data.fill_(1.0)
+            
         self.criterion = nn.BCEWithLogitsLoss() if isClassifier else nn.MSELoss()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=self.gene_class.getGene('learning_rate', self.genes))
+        self.optimizer = optim.Adam(self.model.parameters(), lr=self.gene_class.getGene('learning_rate', self.genes), weight_decay=0.0001)
+        lambda_lr = lambda epoch: self.gene_class.getGene('learning_rate_decay', self.genes) ** epoch  # Define your learning rate decay function
+        self.scheduler = LambdaLR(self.optimizer, lr_lambda=lambda_lr)
         
     def reset_model_weights(self):
         for layer in self.model.children():
@@ -56,6 +64,7 @@ class Individual(nn.Module):
                 loss = self.criterion(torch.squeeze(expected_output), output_batches[i].to(self.device))
                 loss.backward()
                 self.optimizer.step()
+            self.scheduler.step()
             with torch.no_grad():
                 expected_test_output = self.model(test_input.to(self.device))
                 test_loss = self.criterion(torch.squeeze(expected_test_output), test_output.to(self.device)).cpu().numpy()
@@ -66,6 +75,8 @@ class Individual(nn.Module):
             else:
                 current_patience += 1
                 if current_patience > max_patience: break
-            
-        return -(min_test_loss*fitness_loss_weight + min_test_loss_epoch*fitness_epoch_count_weight)
+        
+        self.min_test_loss = min_test_loss
+        self.time_to_convergence = min_test_loss_epoch
+        return -(min_test_loss*fitness_loss_weight + min_test_loss_epoch*fitness_epoch_count_weight) / (fitness_epoch_count_weight + fitness_loss_weight)
         

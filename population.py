@@ -39,13 +39,14 @@ class Population:
         # - parents are not added to the new population, only children
         # - no duplicates and no sub-optimal individuals are added to the new population from the previous population
         
-        # select top X% performing individuals to be in new population
-        num_individuals_to_keep = int(self.populationElitismProportion*len(self.population))
-        individuals_to_keep = np.argsort(self.population_fitness)[-num_individuals_to_keep:]
-        
         # initialize new population genes
         new_population_genes = []
-        new_population_genes.extend([self.population[i].genes for i in individuals_to_keep])
+        
+        # select top X% performing individuals to be in new population
+        num_individuals_to_keep = int(self.populationElitismProportion*len(self.population))
+        if num_individuals_to_keep > 0:
+            individuals_to_keep = np.argsort(self.population_fitness)[-num_individuals_to_keep:]
+            new_population_genes.extend([self.population[i].genes for i in individuals_to_keep])
 
         # breed random parents until new population is big enough
         while len(new_population_genes) < len(self.population):
