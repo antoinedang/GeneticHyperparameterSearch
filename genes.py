@@ -19,11 +19,11 @@ GENOTYPE_TEMPLATES = [
      'learning_rate_decay': True},
      
      # GENE 2
-     {'learning_rate': True, 
-     'hidden_layers': True, 
-     'batch_size': True,
+     {'learning_rate': False, 
+     'hidden_layers': False, 
+     'batch_size': False,
      'dropout': False,
-     'activation': True,
+     'activation': False,
      'learning_rate_decay': False}
 ]
 
@@ -68,7 +68,7 @@ class Genes:
         if (self.template.get('learning_rate', False) and (specific_gene==None or specific_gene==0)):
             learning_rate = random.uniform(0.0001, 0.5)
         else:
-            learning_rate = 0.01    # DEFAULT
+            learning_rate = 0.001    # DEFAULT
 
         # HIDDEN_LAYERS
         if (self.template.get('hidden_layers', False) and (specific_gene==None or specific_gene==1)):
@@ -103,13 +103,13 @@ class Genes:
             for i in range(number_layers):
                 activation.append(random.choice(["linear", "relu", "leaky_relu", "softplus"]))
         else:
-            activation = ["linear"]*number_layers
+            activation = ["relu"]*number_layers
 
         # LEARNING_RATE_DECAY
         if (self.template.get('learning_rate_decay', False) and (specific_gene==None or specific_gene==5)):
-            learning_rate_decay = random.uniform(0.8, 1.0)
+            learning_rate_decay = random.uniform(0.9, 1.0)
         else:
-            learning_rate_decay = 0.9    # DEFAULT
+            learning_rate_decay = 1.0    # DEFAULT
 
 
         return [learning_rate, hidden_layers, batch_size, dropout, activation, learning_rate_decay]

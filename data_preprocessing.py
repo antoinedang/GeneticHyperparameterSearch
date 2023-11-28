@@ -50,7 +50,7 @@ class Dataset:
             lines = credit_data.readlines()[1:] # ignore first line
             for line in lines:
                 input = [float(e) for e in line.split(",")[:-1]]
-                output = float(line.split(",")[-1])
+                output = float(str(line.split(",")[-1][:-1]).replace('"', ''))
                 input_data.append(input)
                 output_data.append(output)
         self.trainTestSplit(input_data, output_data)

@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.optim.lr_scheduler import LambdaLR
+from sklearn.metrics import f1_score
+import torch.nn.functional as F
 
 class Individual(nn.Module):
     def __init__(self, isClassifier, inputSize, outputSize, gene_class, genes=None):
@@ -22,29 +24,20 @@ class Individual(nn.Module):
                 layers.append(nn.Softplus())
             elif self.gene_class.getGene('activation', self.genes)[i] == "leaky_relu":
                 layers.append(nn.LeakyReLU(inplace=True))
-            layers.append(nn.Dropout(p=self.gene_class.getGene('dropout', self.genes)[i]))
+            if self.gene_class.getGene('dropout', self.genes)[i] > 0: layers.append(nn.Dropout(p=self.gene_class.getGene('dropout', self.genes)[i]))
             
         layers.append(nn.Linear(2**self.gene_class.getGene('hidden_layers', self.genes)[-1], outputSize))
-        
+            
         self.model = nn.Sequential(*layers)  
         self.model = self.model.to(self.device)
             
-        # initialize all model weights with 1s (for reproducibility)
-        for param in self.model.parameters():
-            param.data.fill_(1.0)
-            
         self.criterion = nn.BCEWithLogitsLoss() if isClassifier else nn.MSELoss()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=self.gene_class.getGene('learning_rate', self.genes), weight_decay=0.0001)
+        self.isClassifier = isClassifier
+        self.optimizer = optim.Adam(self.model.parameters(), lr=self.gene_class.getGene('learning_rate', self.genes))
         lambda_lr = lambda epoch: self.gene_class.getGene('learning_rate_decay', self.genes) ** epoch  # Define your learning rate decay function
         self.scheduler = LambdaLR(self.optimizer, lr_lambda=lambda_lr)
         
-    def reset_model_weights(self):
-        for layer in self.model.children():
-            if hasattr(layer, 'reset_parameters'):
-                layer.reset_parameters()
-                
-    def getFitness(self, max_epochs, train_input, train_output, test_input, test_output, max_patience, fitness_loss_weight, fitness_epoch_count_weight):
-        self.reset_model_weights()
+    def getFitness(self, max_epochs, train_input, train_output, test_input, test_output, max_patience, fitness_loss_weight, fitness_epoch_count_weight, list_to_update=None, index_to_update=None):
         # train the model for no more than max_epochs
         # save the best test loss (and at what epoch it occurred)
         # return either how many epochs it took to get the best loss
@@ -55,19 +48,31 @@ class Individual(nn.Module):
         min_test_loss = 100000
         input_batches = torch.split(train_input, self.gene_class.getGene('batch_size', self.genes))
         output_batches = torch.split(train_output, self.gene_class.getGene('batch_size', self.genes))
-        
-        self.model.train()
+
         for e in range(max_epochs):
+            self.model.train()
             for i in range(len(input_batches)):
-                self.optimizer.zero_grad()
                 expected_output = self.model(input_batches[i].to(self.device))
-                loss = self.criterion(torch.squeeze(expected_output), output_batches[i].to(self.device))
+                try:
+                    loss = self.criterion(torch.squeeze(expected_output), output_batches[i].to(self.device))
+                except:
+                    continue
+                # print(loss)
+                self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
             self.scheduler.step()
+            self.model.eval()
             with torch.no_grad():
                 expected_test_output = self.model(test_input.to(self.device))
-                test_loss = self.criterion(torch.squeeze(expected_test_output), test_output.to(self.device)).cpu().numpy()
+                try:
+                    test_loss = self.criterion(torch.squeeze(expected_test_output), test_output.to(self.device)).cpu().numpy()
+                except:
+                    continue
+                if self.isClassifier: # use inverted f1 score as loss
+                    predictions = (F.sigmoid(expected_test_output) >= 0.5).float()
+                    test_loss = 1.0 - f1_score(test_output.to(self.device).cpu().numpy(), torch.squeeze(predictions).cpu().numpy(), average='weighted')
+
             if test_loss < min_test_loss:
                 min_test_loss = test_loss
                 min_test_loss_epoch = e
@@ -78,5 +83,11 @@ class Individual(nn.Module):
         
         self.min_test_loss = min_test_loss
         self.time_to_convergence = min_test_loss_epoch
-        return -(min_test_loss*fitness_loss_weight + min_test_loss_epoch*fitness_epoch_count_weight) / (fitness_epoch_count_weight + fitness_loss_weight)
+        
+        fitness = -(min_test_loss*fitness_loss_weight + min_test_loss_epoch*fitness_epoch_count_weight) / (fitness_epoch_count_weight + fitness_loss_weight)
+        
+        if list_to_update is not None:
+            list_to_update[index_to_update] = fitness
+        else:
+            return fitness
         

@@ -1,7 +1,2 @@
-PARAMS: {'dataset': 'diabetes', 'dominant_gene': 1, 'genome_type': 1, 'mutation_p': 10, 'pop_size': 50, 'elitism_portion': 0.2, 'fitness_loss_weight': 150, 'fitness_epoch_count_weight': 1}
-evolutionary_step,best_fitness,best_genotype
-0,0.6064312260671957,0.5571407675743103,8,[0.13272016684267865, [7], 128, [0], ['linear'], 0.8270888828915615]
-1,0.6057995810413992,0.5498382449150085,9,[0.13272016684267865, [7], 128, [0], ['linear'], 0.8270888828915615]
-2,0.5905751542539786,0.5545123219490051,6,[0.14532364060064534, [7], 128, [0], ['linear'], 0.8270888828915615]
-3,0.5660222587206506,0.5564624071121216,2,[0.13272016684267865, [7], 128, [0], ['linear'], 0.8270888828915615]
-4,0.5871194269483453,0.5510335564613342,6,[0.14532364060064534, [7], 128, [0], ['linear'], 0.8270888828915615]
+PARAMS: {'dataset': 'diabetes', 'dominant_gene': 1, 'genome_type': 2, 'mutation_p': 10, 'pop_size': 50, 'elitism_portion': 0.2, 'fitness_loss_weight': 150, 'fitness_epoch_count_weight': 1}
+evolutionary_step,best_fitness,min_loss,convergence_time,best_genotype
