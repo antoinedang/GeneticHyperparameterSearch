@@ -34,9 +34,10 @@ class Dataset:
         train_indices = np.setdiff1d(np.arange(len(test_indices)), test_indices)
         
         self.train_input = F.normalize(torch.from_numpy(np_input_data[train_indices]).type(torch.float32), p=2, dim=0)
-        self.train_output = F.normalize(torch.from_numpy(np_output_data[train_indices]).type(torch.float32), p=2, dim=0)
         self.test_input = F.normalize(torch.from_numpy(np_input_data[test_indices]).type(torch.float32), p=2, dim=0)
-        self.test_output = F.normalize(torch.from_numpy(np_output_data[test_indices]).type(torch.float32), p=2, dim=0)
+        if not self.isClassification:
+            self.train_output = F.normalize(torch.from_numpy(np_output_data[train_indices]).type(torch.float32), p=2, dim=0)
+            self.test_output = F.normalize(torch.from_numpy(np_output_data[test_indices]).type(torch.float32), p=2, dim=0)
             
     def getCreditData(self):
         input_data = []
