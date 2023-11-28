@@ -10,6 +10,11 @@ GENOTYPE_TEMPLATES = [
      'activation': True},
 
      # GENE 1
+     {'learning_rate': True, 
+     'hidden_layers': True, 
+     'batch_size': True,
+     'dropout': False,
+     'activation': True},
 ]
 
 class Genes:
@@ -62,7 +67,7 @@ class Genes:
                 hidden_layers.append(size)
 
         else:
-            hidden_layers = [7]*(number_layers_p-1)     # DEFAULT (128s followed by a 64)
+            hidden_layers = [7]*(number_layers-1)     # DEFAULT (128s followed by a 64)
             hidden_layers.append(6)
 
         # BATCH_SIZE
@@ -76,9 +81,9 @@ class Genes:
         if (self.template.get('dropout', False) and (specific_gene==None or specific_gene==3)):
             dropout = []
             for i in range(number_layers):
-                dropout.append(random.uniform(0, 1.0))
+                dropout.append(random.uniform(0, 0.05))
         else:
-            dropout = [0]*number_layers_p     # DEFAULT IS NO DROPOUT
+            dropout = [0]*number_layers     # DEFAULT IS NO DROPOUT
 
         # ACTIVATION
         if (self.template.get('activation', False) and (specific_gene==None or specific_gene==4)):
@@ -86,7 +91,7 @@ class Genes:
             for i in range(number_layers):
                 activation.append(random.choice(["linear", "relu", "leaky_relu", "softplus"]))
         else:
-            activation = ["linear"]*number_layers_p
+            activation = ["linear"]*number_layers
 
 
         return [learning_rate, hidden_layers, batch_size, dropout, activation]
@@ -114,6 +119,7 @@ class Genes:
         # Assumption: an individual with more than half its genes mutated is not the same individual
         number_mutated_genes = random.randint(0, int(len(self.active_genes)/2)) 
         mutated_individual= genotype[:]
+        mutated = False
 
         for i in range(number_mutated_genes):
 
@@ -121,6 +127,7 @@ class Genes:
 
             # Apply mutation if the random number is less than or equal to the specified mutation probability
             if rand <= float(self.mutation_prob/100):
+                mutated = True
                 gene_number = random.choice(self.active_genes)
 
                 # Generate a random gene to replace the gene at the selected position
@@ -129,6 +136,7 @@ class Genes:
                 # Update the old gene with the generated gene
                 mutated_individual[gene_number] = temp_gene[gene_number]
 
+        if not mutated: return self.mutate(genotype) # guarantee at least one mutation
 
         return mutated_individual
 

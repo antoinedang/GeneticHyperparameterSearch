@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 
 class Individual(nn.Module):
-    def __init__(self, isClassifier, inputSize, outputSize, optimization, target_loss, gene_class, genes=None):
+    def __init__(self, isClassifier, inputSize, outputSize, gene_class, genes=None):
         super().__init__()
         self.gene_class = gene_class
         self.genes = self.gene_class.random() if genes is None else genes
@@ -29,20 +29,20 @@ class Individual(nn.Module):
         self.model = self.model.to(self.device)
         self.criterion = nn.BCEWithLogitsLoss() if isClassifier else nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.gene_class.getGene('learning_rate', self.genes))
-        self.optimization = optimization
-        self.target_loss = target_loss
         
     def reset_model_weights(self):
         for layer in self.model.children():
             if hasattr(layer, 'reset_parameters'):
                 layer.reset_parameters()
                 
-    def getFitness(self, max_epochs, train_input, train_output, test_input, test_output):
+    def getFitness(self, max_epochs, train_input, train_output, test_input, test_output, max_patience, fitness_loss_weight, fitness_epoch_count_weight):
         self.reset_model_weights()
         # train the model for no more than max_epochs
         # save the best test loss (and at what epoch it occurred)
         # return either how many epochs it took to get the best loss
         # or the best loss itself
+
+        current_patience = 0
         min_test_loss_epoch = 100000
         min_test_loss = 100000
         input_batches = torch.split(train_input, self.gene_class.getGene('batch_size', self.genes))
@@ -62,9 +62,10 @@ class Individual(nn.Module):
             if test_loss < min_test_loss:
                 min_test_loss = test_loss
                 min_test_loss_epoch = e
-            if self.target_loss > test_loss:
-                break
+                current_patience = 0
+            else:
+                current_patience += 1
+                if current_patience > max_patience: break
             
-        if self.optimization == "loss": return -test_loss
-        else: return -min_test_loss_epoch if min_test_loss <= self.target_loss else -99999
+        return -(min_test_loss*fitness_loss_weight + min_test_loss_epoch*fitness_epoch_count_weight)
         

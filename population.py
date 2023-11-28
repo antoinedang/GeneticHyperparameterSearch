@@ -1,24 +1,26 @@
 import torch
 from individual import Individual
 import numpy as np
+import random
 
 class Population:
-    def __init__(self, populationSize, dataset, maxEpochsPerIndividual, populationElitismProportion, optimization, target_loss, gene_class):
+    def __init__(self, populationSize, dataset, maxEpochsPerIndividual, populationElitismProportion, gene_class, max_patience, fitness_loss_weight, fitness_epoch_count_weight):
         self.population = []
         self.population_fitness = [0]*populationSize
         self.dataset = dataset
         self.maxEpochsPerIndividual = maxEpochsPerIndividual
         self.populationElitismProportion = populationElitismProportion
         self.gene_class = gene_class
-        self.optimization = optimization
-        self.target_loss = target_loss
+        self.max_patience = max_patience
+        self.fitness_loss_weight = fitness_loss_weight
+        self.fitness_epoch_count_weight = fitness_epoch_count_weight
         for _ in range(populationSize):
-            self.population.append(Individual(self.dataset.isClassification, self.dataset.inputSize, self.dataset.outputSize, optimization, target_loss, self.gene_class))
+            self.population.append(Individual(self.dataset.isClassification, self.dataset.inputSize, self.dataset.outputSize, self.gene_class))
     
     def evaluatePopulation(self):
         for i in range(len(self.population)):
             print("Training models... {}%                        ".format(100*(i+1)/len(self.population)), end='\r')
-            self.population_fitness[i] = self.population[i].getFitness(self.maxEpochsPerIndividual, self.dataset.train_input, self.dataset.train_output, self.dataset.test_input, self.dataset.test_output)
+            self.population_fitness[i] = self.population[i].getFitness(self.maxEpochsPerIndividual, self.dataset.train_input, self.dataset.train_output, self.dataset.test_input, self.dataset.test_output, self.max_patience, self.fitness_loss_weight, self.fitness_epoch_count_weight)
         return max(self.population_fitness)
     
     def getOptimalIndividual(self):
@@ -47,7 +49,7 @@ class Population:
 
         # breed random parents until new population is big enough
         while len(new_population_genes) < len(self.population):
-            np_fitnesses = np.array(self.population_fitness) * -1 # times -1 because better fitnesses are smaller
+            np_fitnesses = np.array(self.population_fitness)
             np_normalized_fitnesses = np_fitnesses - np.min(np_fitnesses) # make values start at 0
             np_normalized_fitnesses = np_normalized_fitnesses / np.sum(np_normalized_fitnesses) # make all values add up to 1
             
@@ -63,13 +65,18 @@ class Population:
                 child2_genes = self.gene_class.mutate(child2_genes)
                 new_population_genes.append(child1_genes)
                 new_population_genes.append(child2_genes)
+        
+        while len(new_population_genes) > len(self.population):
+            i_to_remove = random.randint(0,len(new_population_genes)-1)
+            new_population_genes.pop(i_to_remove)
+            
 
         self.population = []
         torch.cuda.empty_cache()
         # instantiate phenotypes of new population genes
         new_population = []
         for new_gene in new_population_genes:
-            new_population.append(Individual(self.dataset.isClassification, self.dataset.inputSize, self.dataset.outputSize, self.optimization, self.target_loss, self.gene_class, new_gene))
+            new_population.append(Individual(self.dataset.isClassification, self.dataset.inputSize, self.dataset.outputSize, self.gene_class, new_gene))
 
         # delete old population and save new population
         self.population = new_population

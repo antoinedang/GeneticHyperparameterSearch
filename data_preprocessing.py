@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+import torch.nn.functional as F
 
 class Dataset:
     def __init__(self, dataset):
@@ -32,10 +33,10 @@ class Dataset:
         test_indices = np.random.choice(len(np_input_data), size=int(len(np_input_data)*test_split), replace=False)
         train_indices = np.setdiff1d(np.arange(len(test_indices)), test_indices)
         
-        self.train_input = torch.from_numpy(np_input_data[train_indices]).type(torch.float32)
-        self.train_output = torch.from_numpy(np_output_data[train_indices]).type(torch.float32)
-        self.test_input = torch.from_numpy(np_input_data[test_indices]).type(torch.float32)
-        self.test_output = torch.from_numpy(np_output_data[test_indices]).type(torch.float32)
+        self.train_input = F.normalize(torch.from_numpy(np_input_data[train_indices]).type(torch.float32), p=2, dim=0)
+        self.train_output = F.normalize(torch.from_numpy(np_output_data[train_indices]).type(torch.float32), p=2, dim=0)
+        self.test_input = F.normalize(torch.from_numpy(np_input_data[test_indices]).type(torch.float32), p=2, dim=0)
+        self.test_output = F.normalize(torch.from_numpy(np_output_data[test_indices]).type(torch.float32), p=2, dim=0)
             
     def getCreditData(self):
         input_data = []
