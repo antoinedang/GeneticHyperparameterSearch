@@ -73,7 +73,7 @@ class Individual(nn.Module):
                         test_loss = self.criterion(torch.squeeze(expected_test_output), test_output.to(self.device)).cpu().numpy()
                     except:
                         continue
-            print(test_loss)
+            # print(test_loss)
             if test_loss < min_test_loss:
                 min_test_loss = test_loss
                 min_test_loss_epoch = e
