@@ -69,11 +69,7 @@ class Individual(nn.Module):
                     predictions = (F.sigmoid(expected_test_output) >= 0.5).float()
                     test_loss = 1.0 - f1_score(test_output.to(self.device).cpu().numpy(), torch.squeeze(predictions).cpu().numpy(), average='weighted')
                 else:
-                    try:
-                        test_loss = self.criterion(torch.squeeze(expected_test_output), test_output.to(self.device)).cpu().numpy()
-                    except:
-                        continue
-            # print(test_loss)
+                    test_loss = self.criterion(torch.squeeze(expected_test_output), test_output.to(self.device)).cpu().numpy()
             if test_loss < min_test_loss:
                 min_test_loss = test_loss
                 min_test_loss_epoch = e

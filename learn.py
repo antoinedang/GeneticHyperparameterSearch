@@ -3,7 +3,20 @@ from data_preprocessing import Dataset
 from genes import Genes
 from utils import *
 
-def learn(populationSize = 10, populationElitismProportion = 0.2, dataset_type = "diabetes", mutation_prob = 10, dominant_gene = 1, genome_type = 0, fitness_loss_weight = 150, fitness_epoch_count_weight = 1, maxEpochsPerIndividual = 10000, max_patience = 100, max_evolutionary_patience = 20, max_evolutionary_steps = 100, experiment_name = "normal", save_experiment_results = True):
+def learn(populationSize = 10,
+          populationElitismProportion = 0.2,
+          dataset_type = "housing",
+          mutation_prob = 10,
+          dominant_gene = 1,
+          genome_type = 0,
+          fitness_loss_weight = 150,
+          fitness_epoch_count_weight = 0,
+          maxEpochsPerIndividual = 10000,
+          max_patience = 100,
+          max_evolutionary_patience = 20,
+          max_evolutionary_steps = 100,
+          experiment_name = "normal",
+          save_experiment_results = True):
     # # EVOLUTIONARY PARAMETERS
     # populationSize = 50
     # populationElitismProportion = 0.20
