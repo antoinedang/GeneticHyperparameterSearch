@@ -55,8 +55,12 @@ class Population:
             np_normalized_fitnesses = np_normalized_fitnesses / np.sum(np_normalized_fitnesses) # make all values add up to 1
             
             # Randomly select two indices based on probabilities proportional to fitnesses
-            i1 = np.random.choice(len(np_normalized_fitnesses), p=np_normalized_fitnesses)
-            i2 = np.random.choice(len(np_normalized_fitnesses), p=np_normalized_fitnesses)
+            try:
+                i1 = np.random.choice(len(np_normalized_fitnesses), p=np_normalized_fitnesses)
+                i2 = np.random.choice(len(np_normalized_fitnesses), p=np_normalized_fitnesses)
+            except:
+                i1 = np.random.choice(len(np_normalized_fitnesses))
+                i2 = np.random.choice(len(np_normalized_fitnesses))
             if i1 != i2: # parent cannot breed with itself, do not make children
                 parent_1 = self.population[i1]
                 parent_2 = self.population[i2]

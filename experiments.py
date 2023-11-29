@@ -22,10 +22,10 @@ def experiment_1():
     # learn(genome_type=1, dataset_type="diabetes", experiment_name="gen_2_diabetes")
     # learn(genome_type=2, dataset_type="diabetes", experiment_name="gen_3_diabetes")
     
-    #THIRD DATASET
-    learn(genome_type=0, dataset_type="hardness", experiment_name="gen_0_hardness")
-    learn(genome_type=1, dataset_type="hardness", experiment_name="gen_1_hardness")
-    learn(genome_type=2, dataset_type="hardness", experiment_name="gen_2_hardness")
+    # #THIRD DATASET
+    # learn(genome_type=0, dataset_type="hardness", experiment_name="gen_0_hardness")
+    # learn(genome_type=1, dataset_type="hardness", experiment_name="gen_1_hardness")
+    # learn(genome_type=2, dataset_type="hardness", experiment_name="gen_2_hardness")
 
     #FOURTH DATASET
     learn(genome_type=0, dataset_type="credit", experiment_name="gen_1_credit")
@@ -133,6 +133,6 @@ if __name__ == "__main__":
 
     experiment_1()
     experiment_2()
-    experiment_3()
+    # experiment_3()
     experiment_4()
-    experiment_5()
+    # experiment_5()
