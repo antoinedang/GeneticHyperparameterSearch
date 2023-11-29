@@ -23,7 +23,7 @@ plotTitle = "Population Distribution"
 xAxisName = "Loss"
 yAxisName = "Frequency"
 videoName = 'experiment_results/population_evolution'
-fps = 5
+fps = 2
 
 with open(data_file, "r") as f:
     lines = f.readlines()[2:]
