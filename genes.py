@@ -111,6 +111,7 @@ class Genes:
         else:
             learning_rate_decay = 1.0    # DEFAULT
 
+        # OTHER HYPERPARAMETERS?
 
         return [learning_rate, hidden_layers, batch_size, dropout, activation, learning_rate_decay]
 
