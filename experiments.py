@@ -7,6 +7,7 @@ from learn import learn
 # 5 - Different crossover functions
 # 6 - Random baseline + model baseline
 # 7 - Fitness function weights (convergence speed vs performance)
+# 8 - Plot fitness for specific hyper params (genes)
 
 # Genome templates
 def experiment_1():
