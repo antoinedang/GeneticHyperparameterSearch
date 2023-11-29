@@ -26,7 +26,7 @@ def getCSVData(filename, x_index, y_index):
         for line in lines:
             try:
                 x.append(float(line.split(",")[x_index]))
-                y.append(float(line.split(",")[y_index]))
+                y.append(max(0, 1.0-float(line.split(",")[y_index])))
             except:
                 continue
     return x,y

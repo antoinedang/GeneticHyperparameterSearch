@@ -9,9 +9,9 @@ def generateFrame(i):
     performance_array = [float(p) for p in performance_array]
     # data_range = min(max_val, max(performance_array)-min(performance_array))
     data_range = max_val
-    performance_array = [float(p) if float(p) < max_val else max_val for p in performance_array]
+    performance_array = [max_val - float(p) if float(p) < max_val else 0 for p in performance_array]
     plt.clf()  # Clear the current figure
-    plt.hist(performance_array, bins=[data_range * (i/num_bins) for i in range(num_bins+1)], edgecolor='black')
+    plt.hist(performance_array, bins=[data_range * (i/num_bins) for i in range(num_bins+1)])
     plt.xlabel(xAxisName)
     plt.ylabel(yAxisName)
     plt.title(plotTitle + ' Iteration {}'.format(epoch_number))
