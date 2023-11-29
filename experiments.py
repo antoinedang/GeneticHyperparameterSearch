@@ -51,7 +51,7 @@ def experiment_3():
     learn(populationSize=10, max_evolutionary_steps=100, dataset_type="housing", experiment_name="lowpop_highsteps_diabetes") # low pop size, high max evolutionary steps 
 
 
-def __init__():
+if __name__ == "__main__":
 
     experiment_1()
     experiment_2()
