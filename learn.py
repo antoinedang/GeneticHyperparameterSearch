@@ -14,7 +14,7 @@ def learn(populationSize = 30,
           maxEpochsPerIndividual = 10000,
           max_patience = 100,
           max_evolutionary_patience = 20,
-          max_evolutionary_steps = 100,
+          max_evolutionary_steps = 20,
           experiment_name = "normal",
           save_experiment_results = True):
     # # EVOLUTIONARY PARAMETERS
