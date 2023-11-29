@@ -39,10 +39,16 @@ def learn(populationSize = 10,
     
     if save_experiment_results:
         parameters = {"dataset": dataset_type, "dominant_gene":dominant_gene, "genome_type": genome_type, "mutation_p": mutation_prob, "pop_size": populationSize, "elitism_portion":populationElitismProportion, "fitness_loss_weight":fitness_loss_weight, "fitness_epoch_count_weight":fitness_epoch_count_weight}
-        writeToFile("experiment_results/" + experiment_name, "PARAMS: " + str(parameters))
-        writeToFile("experiment_results/" + experiment_name + "_fitness_distribution", "evolutionary_step,[best_fitnesses]")
-        writeToFile("experiment_results/" + experiment_name + "_loss_distribution", "evolutionary_step,[min_losses]")
+        writeToFile("experiment_results/" + experiment_name + "_fitness_distribution", "PARAMS: " + str(parameters))
+        writeToFile("experiment_results/" + experiment_name + "_fitness_distribution", "evolutionary_step,[fitness]")
+        
+        writeToFile("experiment_results/" + experiment_name + "_loss_distribution", "PARAMS: " + str(parameters))
+        writeToFile("experiment_results/" + experiment_name + "_loss_distribution", "evolutionary_step,[losses]")
+        
+        writeToFile("experiment_results/" + experiment_name + "_convergence_time_distribution", "PARAMS: " + str(parameters))
         writeToFile("experiment_results/" + experiment_name + "_convergence_time_distribution", "evolutionary_step,[convergence_times]")
+        
+        writeToFile("experiment_results/" + experiment_name, "PARAMS: " + str(parameters))
         appendToFile("experiment_results/" + experiment_name, "evolutionary_step,best_fitness,min_loss,convergence_time,best_genotype")
 
     dataset = Dataset(dataset_type)
@@ -62,8 +68,8 @@ def learn(populationSize = 10,
         if save_experiment_results:
             info = "{},{},{},{},{}".format(num_evolutionary_steps, population_fitness, population.getOptimalIndividual().min_test_loss, population.getOptimalIndividual().time_to_convergence, population.getOptimalIndividual().genes)
             appendToFile("experiment_results/" + experiment_name, info)
-            appendToFile("experiment_results/" + experiment_name + "_fitness_distribution", str(num_evolutionary_steps) + "," + str([p.min_test_loss for p in population.population]))
-            appendToFile("experiment_results/" + experiment_name + "_loss_distribution", str(num_evolutionary_steps) + "," + str([p.min_test_loss for p in population.population]))
+            appendToFile("experiment_results/" + experiment_name + "_fitness_distribution", str(num_evolutionary_steps) + "," + str([-pf for pf in population.population_fitness]))
+            appendToFile("experiment_results/" + experiment_name + "_loss_distribution", str(num_evolutionary_steps) + "," + str([float(p.min_test_loss) for p in population.population]))
             appendToFile("experiment_results/" + experiment_name + "_convergence_time_distribution", str(num_evolutionary_steps) + "," + str([p.time_to_convergence for p in population.population]))
             
         

@@ -66,7 +66,7 @@ class Genes:
 
         # LEARNING_RATE
         if (self.template.get('learning_rate', False) and (specific_gene==None or specific_gene==0)):
-            learning_rate = random.uniform(0.0001, 0.5)
+            learning_rate = random.uniform(0.00001, 1.0)
         else:
             learning_rate = 0.001    # DEFAULT
 
@@ -75,7 +75,7 @@ class Genes:
             hidden_layers = []
 
             for i in range(number_layers):
-                size = random.randint(2, 7)
+                size = random.randint(2, 8)
                 hidden_layers.append(size)
 
         else:
@@ -84,7 +84,7 @@ class Genes:
 
         # BATCH_SIZE
         if (self.template.get('batch_size', False) and (specific_gene==None or specific_gene==2)):
-            batch_power = random.randint(2,9)
+            batch_power = random.randint(1,9)
             batch_size = 2**batch_power
         else:
             batch_size = 64     # DEFAULT
@@ -93,7 +93,7 @@ class Genes:
         if (self.template.get('dropout', False) and (specific_gene==None or specific_gene==3)):
             dropout = []
             for i in range(number_layers):
-                dropout.append(random.uniform(0, 0.05))
+                dropout.append(random.uniform(0, 0.1))
         else:
             dropout = [0]*number_layers     # DEFAULT IS NO DROPOUT
 
@@ -107,7 +107,7 @@ class Genes:
 
         # LEARNING_RATE_DECAY
         if (self.template.get('learning_rate_decay', False) and (specific_gene==None or specific_gene==5)):
-            learning_rate_decay = random.uniform(0.9, 1.0)
+            learning_rate_decay = random.uniform(0.8, 1.0)
         else:
             learning_rate_decay = 1.0    # DEFAULT
 
