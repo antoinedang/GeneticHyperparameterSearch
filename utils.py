@@ -17,4 +17,16 @@ def appendToFile(filename, text):
 def writeToFile(filename, text):
     with open(filename + ".csv", 'w') as f:
         f.write(text + '\n')
-        
+
+def getCSVData(filename, x_index, y_index):
+    x = []
+    y = []
+    with open(filename, "r") as f:
+        lines = f.readlines()
+        for line in lines:
+            try:
+                x.append(float(line.split(",")[x_index]))
+                y.append(max(0, 1.0-float(line.split(",")[y_index])))
+            except:
+                continue
+    return x,y

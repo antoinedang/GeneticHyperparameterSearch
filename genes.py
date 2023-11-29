@@ -87,7 +87,7 @@ class Genes:
             batch_power = random.randint(1,9)
             batch_size = 2**batch_power
         else:
-            batch_size = 6     # DEFAULT
+            batch_size = 64     # DEFAULT
 
         # DROPOUT
         if (self.template.get('dropout', False) and (specific_gene==None or specific_gene==3)):
@@ -111,6 +111,7 @@ class Genes:
         else:
             learning_rate_decay = 1.0    # DEFAULT
 
+        # OTHER HYPERPARAMETERS?
 
         return [learning_rate, hidden_layers, batch_size, dropout, activation, learning_rate_decay]
 
