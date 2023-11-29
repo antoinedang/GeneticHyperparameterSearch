@@ -19,11 +19,11 @@ GENOTYPE_TEMPLATES = [
      'learning_rate_decay': True},
      
      # GENE 2
-     {'learning_rate': False, 
-     'hidden_layers': False, 
+     {'learning_rate': True, 
+     'hidden_layers': True, 
      'batch_size': False,
      'dropout': False,
-     'activation': False,
+     'activation': True,
      'learning_rate_decay': False}
 ]
 
@@ -87,7 +87,7 @@ class Genes:
             batch_power = random.randint(1,9)
             batch_size = 2**batch_power
         else:
-            batch_size = 64     # DEFAULT
+            batch_size = 6     # DEFAULT
 
         # DROPOUT
         if (self.template.get('dropout', False) and (specific_gene==None or specific_gene==3)):

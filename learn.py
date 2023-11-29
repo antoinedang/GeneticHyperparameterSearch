@@ -3,7 +3,7 @@ from data_preprocessing import Dataset
 from genes import Genes
 from utils import *
 
-def learn(populationSize = 10,
+def learn(populationSize = 30,
           populationElitismProportion = 0.2,
           dataset_type = "housing",
           mutation_prob = 10,
