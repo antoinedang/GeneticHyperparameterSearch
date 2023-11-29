@@ -75,7 +75,7 @@ class Genes:
             hidden_layers = []
 
             for i in range(number_layers):
-                size = random.randint(2, 7)
+                size = random.randint(2, 8)
                 hidden_layers.append(size)
 
         else:
