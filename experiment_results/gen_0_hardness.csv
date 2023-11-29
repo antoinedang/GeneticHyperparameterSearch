@@ -1,0 +1,2 @@
+PARAMS: {'dataset': 'hardness', 'dominant_gene': 1, 'genome_type': 0, 'mutation_p': 10, 'pop_size': 30, 'elitism_portion': 0.2, 'fitness_loss_weight': 150, 'fitness_epoch_count_weight': 0}
+evolutionary_step,best_fitness,min_loss,convergence_time,best_genotype

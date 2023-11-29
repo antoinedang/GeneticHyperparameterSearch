@@ -75,7 +75,7 @@ class Genes:
             hidden_layers = []
 
             for i in range(number_layers):
-                size = random.randint(2, 8)
+                size = random.randint(2, 7)
                 hidden_layers.append(size)
 
         else:
@@ -87,7 +87,7 @@ class Genes:
             batch_power = random.randint(1,9)
             batch_size = 2**batch_power
         else:
-            batch_size = 6     # DEFAULT
+            batch_size = 64     # DEFAULT
 
         # DROPOUT
         if (self.template.get('dropout', False) and (specific_gene==None or specific_gene==3)):
