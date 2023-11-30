@@ -142,3 +142,5 @@ if __name__ == "__main__":
     # plot the remaining experiments
     # get best genetic algorithm parameters from slides, run with those parameters until convergence
     # compare the performance of this model (loss/epoch curve) with the baseline model 
+    # fit all plots into slides
+    # make sure slides dont do fallacies
