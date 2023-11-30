@@ -131,14 +131,19 @@ def experiment_5():
     # learn(dataset_type="credit", experiment_name="5_convergence_and_loss_fitness_credit", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/50) # high pop size, low max evolutionary steps 
     # learn(dataset_type="credit", experiment_name="5_mostly_convergence_time_fitness_credit", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/10) # high pop size, low max evolutionary steps 
     
+def find_optimal_models():
+    learn(dataset_type="hardness", trackOptimalTestLoss=True, experiment_name="hardness_optimal_loss_curve")
+    learn(dataset_type="housing", trackOptimalTestLoss=True, experiment_name="housing_optimal_loss_curve")
+    learn(dataset_type="diabetes", trackOptimalTestLoss=True, experiment_name="diabetes_optimal_loss_curve")
+    
 if __name__ == "__main__":
 
     # experiment_1()
-    experiment_2()
+    # experiment_2()
     # experiment_3()
-    experiment_4()
+    # experiment_4()
     # experiment_5()
-    
+    find_optimal_models()
     
     # TODO:
     # plot the remaining experiments

@@ -4,6 +4,7 @@ import torch.optim as optim
 from torch.optim.lr_scheduler import LambdaLR
 from sklearn.metrics import f1_score
 import torch.nn.functional as F
+from utils import *
 
 class Individual(nn.Module):
     def __init__(self, isClassifier, inputSize, outputSize, gene_class, genes=None):
@@ -37,7 +38,7 @@ class Individual(nn.Module):
         lambda_lr = lambda epoch: self.gene_class.getGene('learning_rate_decay', self.genes) ** epoch  # Define your learning rate decay function
         self.scheduler = LambdaLR(self.optimizer, lr_lambda=lambda_lr)
         
-    def getFitness(self, max_epochs, train_input, train_output, test_input, test_output, max_patience, fitness_loss_weight, fitness_epoch_count_weight, list_to_update=None, index_to_update=None):
+    def getFitness(self, max_epochs, train_input, train_output, test_input, test_output, max_patience, fitness_loss_weight, fitness_epoch_count_weight, track_training=False, file_to_append_to=None):
         # train the model for no more than max_epochs
         # save the best test loss (and at what epoch it occurred)
         # return either how many epochs it took to get the best loss
@@ -65,6 +66,10 @@ class Individual(nn.Module):
             self.model.eval()
             with torch.no_grad():
                 expected_test_output = self.model(test_input.to(self.device))
+                if track_training:
+                    test_loss = self.criterion(torch.squeeze(expected_test_output), test_output.to(self.device)).cpu().numpy()
+                    appendToFile(file_to_append_to, "{},{}".format(e, test_loss))
+                    
                 if self.isClassifier: # use inverted f1 score as loss
                     predictions = (F.sigmoid(expected_test_output) >= 0.5).float()
                     test_loss = 1.0 - f1_score(test_output.to(self.device).cpu().numpy(), torch.squeeze(predictions).cpu().numpy(), average='weighted')
@@ -83,8 +88,5 @@ class Individual(nn.Module):
         
         fitness = -(min_test_loss*fitness_loss_weight + min_test_loss_epoch*fitness_epoch_count_weight) / (fitness_epoch_count_weight + fitness_loss_weight)
         
-        if list_to_update is not None:
-            list_to_update[index_to_update] = fitness
-        else:
-            return fitness
+        return fitness
         

@@ -3,20 +3,21 @@ from data_preprocessing import Dataset
 from genes import Genes
 from utils import *
 
-def learn(populationSize = 30,
+def learn(populationSize = 50,
           populationElitismProportion = 0.2,
           dataset_type = "housing",
-          mutation_prob = 10,
+          mutation_prob = 25,
           dominant_gene = 1,
-          genome_type = 0,
-          fitness_loss_weight = 150,
+          genome_type = 2,
+          fitness_loss_weight = 1,
           fitness_epoch_count_weight = 0,
           maxEpochsPerIndividual = 1000,
           max_patience = 100,
           max_evolutionary_patience = 20,
           max_evolutionary_steps = 20,
           experiment_name = "normal",
-          save_experiment_results = True):
+          save_experiment_results = True,
+          trackOptimalTestLoss = False):
     # # EVOLUTIONARY PARAMETERS
     # populationSize = 50
     # populationElitismProportion = 0.20
@@ -57,7 +58,7 @@ def learn(populationSize = 30,
     population_fitness = abs(population.evaluatePopulation())
     num_evolutionary_steps = 0
     best_population_fitness = population_fitness
-    best_population_genotype = None
+    optimalIndividual = None
     current_evolutionary_patience = 0
     stopped_early = False
 
@@ -76,7 +77,7 @@ def learn(populationSize = 30,
         # EARLY STOPPING UPDATE PATIENCE
         if population_fitness < best_population_fitness:
             best_population_fitness = population_fitness
-            best_population_genotype = population.getOptimalIndividual().genes
+            optimalIndividual = population.getOptimalIndividual()
             current_evolutionary_patience = 0
         else:
             current_evolutionary_patience += 1
@@ -92,6 +93,10 @@ def learn(populationSize = 30,
     else:
         print("Evolution stopped early.               ")
         
+    if trackOptimalTestLoss:
+        optimalIndividual.getFitness(maxEpochsPerIndividual, dataset.train_input, dataset.train_output, dataset.test_input, dataset.test_output, max_patience, fitness_loss_weight, fitness_epoch_count_weight, track_training=True, file_to_append_to="experiment_results/" + experiment_name)
+        
+    best_population_genotype = optimalIndividual.genes
     print("Optimal genes: {}           ".format(best_population_genotype))
     print("Optimal fitness: {}                 ".format(best_population_fitness))
 
