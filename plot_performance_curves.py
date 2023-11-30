@@ -8,7 +8,7 @@ def fit_polynomial(x, y, deg):
     polynomial = np.poly1d(coefficients)
     return polynomial
 
-plots = [('gen_0_housing.csv', "Gen 0"), ('gen_1_housing.csv', "Gen 1"), ('gen_2_housing.csv', "Gen 2")]  # Replace with your actual filenames
+plots = [('4_no_elitism_diabetes.csv', "Elitism 0%"), ('4_avg_elitism_diabetes.csv', "Elitism 20%"), ('4_high_elitism_diabetes.csv', "Elitism 50%")]  # Replace with your actual filenames
 x_index = 0
 y_index = 1
 trend_poly_degree = 2
@@ -22,7 +22,7 @@ for filename, line_label in plots:
 
 plt.xlabel('Evolutionary Steps')
 plt.ylabel('Optimal Model Performance')
-plt.title('GA Performance vs. Genome Type')
+plt.title('GA Performance vs. Genome Type (Diabetes)')
 plt.legend()
 plt.grid(True)
 plt.show()
