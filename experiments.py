@@ -136,3 +136,9 @@ if __name__ == "__main__":
     # experiment_3()
     experiment_4()
     # experiment_5()
+    
+    
+    # TODO:
+    # plot the remaining experiments
+    # get best genetic algorithm parameters from slides, run with those parameters until convergence
+    # compare the performance of this model (loss/epoch curve) with the baseline model 
