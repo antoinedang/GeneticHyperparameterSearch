@@ -9,6 +9,8 @@ from learn import learn
 # 7 - our algorithm vs. hyperparameter grid search baseline (number of epochs until a certain loss is found)
 # 8 - Plot fitness for specific hyper params (genes)
 
+# time based 
+
 # Genome templates
 def experiment_1():
 

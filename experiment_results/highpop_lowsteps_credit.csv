@@ -1,0 +1,3 @@
+PARAMS: {'dataset': 'credit', 'dominant_gene': 1, 'genome_type': 0, 'mutation_p': 10, 'pop_size': 200, 'elitism_portion': 0.2, 'fitness_loss_weight': 150, 'fitness_epoch_count_weight': 0}
+evolutionary_step,best_fitness,min_loss,convergence_time,best_genotype
+0,0.0074937343358396635,0.0074937343358396635,0,[0.8623756891819832, [5], 4, [0.022952008644700483], ['relu'], 0.7784499928601777]
