@@ -47,7 +47,7 @@ for datasetType in ["housing", "diabetes", "hardness"]:
 
     input_batches = torch.split(dataset.train_input, batch_size)
     output_batches = torch.split(dataset.train_output, batch_size)
-    num_epochs = 1000
+    num_epochs = 200
 
     for e in range(num_epochs):
         model.train()

@@ -12,19 +12,22 @@ plots = [('baseline_diabetes.csv', "Baseline"), ('diabetes_default_loss_curve.cs
 x_index = 0
 y_index = 1
 plot_trend = False
+invert = False
 trend_poly_degree = 2
+y_log_scale = True
 
 for filename, line_label in plots:
-    x,y = getCSVData("experiment_results/" + filename, x_index, y_index)
+    x,y = getCSVData("experiment_results/" + filename, x_index, y_index, invert = False)
     plt.plot(x, y, label=line_label)
     # plot trend
     if plot_trend:
         polynomial = fit_polynomial(x, y, trend_poly_degree)
         plt.plot(x, polynomial(x), color='grey', linestyle='dotted')
 
-plt.xlabel('Evolutionary Steps')
-plt.ylabel('Optimal Model Performance')
-plt.title('GA Performance vs. Genome Type (Hardness)')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+if y_log_scale: plt.yscale('log')
+plt.title('Loss vs. Epochs (Diabetes)')
 plt.legend()
 plt.grid(True)
 plt.show()

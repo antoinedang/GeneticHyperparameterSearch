@@ -132,13 +132,13 @@ def experiment_5():
     # learn(dataset_type="credit", experiment_name="5_mostly_convergence_time_fitness_credit", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/10) # high pop size, low max evolutionary steps 
     
 def find_optimal_models():
-    learn(dataset_type="hardness", trackOptimalTestLoss=True, save_experiment_results=False, experiment_name="hardness_optimal_loss_curve")
-    learn(dataset_type="housing", trackOptimalTestLoss=True, save_experiment_results=False, experiment_name="housing_optimal_loss_curve")
+    # learn(dataset_type="hardness", trackOptimalTestLoss=True, save_experiment_results=False, experiment_name="hardness_optimal_loss_curve")
+    # learn(dataset_type="housing", trackOptimalTestLoss=True, save_experiment_results=False, experiment_name="housing_optimal_loss_curve")
     learn(dataset_type="diabetes", trackOptimalTestLoss=True, save_experiment_results=False, experiment_name="diabetes_optimal_loss_curve")
     
-    learn(dataset_type="hardness", trackOptimalTestLoss=True, save_experiment_results=False, experiment_name="hardness_default_loss_curve", genome_type=3, max_evolutionary_steps=2)
-    learn(dataset_type="housing", trackOptimalTestLoss=True, save_experiment_results=False, experiment_name="housing_default_loss_curve", genome_type=3, max_evolutionary_steps=2)
-    learn(dataset_type="diabetes", trackOptimalTestLoss=True, save_experiment_results=False, experiment_name="diabetes_default_loss_curve", genome_type=3, max_evolutionary_steps=2)
+    # learn(dataset_type="hardness", trackOptimalTestLoss=True, save_experiment_results=False, experiment_name="hardness_default_loss_curve", genome_type=3, max_evolutionary_steps=2)
+    # learn(dataset_type="housing", trackOptimalTestLoss=True, save_experiment_results=False, experiment_name="housing_default_loss_curve", genome_type=3, max_evolutionary_steps=2)
+    # learn(dataset_type="diabetes", trackOptimalTestLoss=True, save_experiment_results=False, experiment_name="diabetes_default_loss_curve", genome_type=3, max_evolutionary_steps=2)
     
 if __name__ == "__main__":
 
