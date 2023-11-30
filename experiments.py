@@ -29,10 +29,10 @@ def experiment_1():
     learn(genome_type=1, dataset_type="hardness", experiment_name="gen_1_hardness")
     learn(genome_type=2, dataset_type="hardness", experiment_name="gen_2_hardness")
 
-    #FOURTH DATASET
-    learn(genome_type=0, dataset_type="credit", experiment_name="gen_1_credit")
-    learn(genome_type=1, dataset_type="credit", experiment_name="gen_2_credit")
-    learn(genome_type=2, dataset_type="credit", experiment_name="gen_3_credit")
+    # # FOURTH DATASET
+    # learn(genome_type=0, dataset_type="credit", experiment_name="gen_1_credit")
+    # learn(genome_type=1, dataset_type="credit", experiment_name="gen_2_credit")
+    # learn(genome_type=2, dataset_type="credit", experiment_name="gen_3_credit")
 
 
 # Mutation probability
@@ -53,10 +53,10 @@ def experiment_2():
     learn(mutation_prob=20, dataset_type="hardness", experiment_name="mut_20_hardness")
     learn(mutation_prob=30, dataset_type="hardness", experiment_name="mut_30_hardness")
 
-    #FOURTH DATASET
-    learn(mutation_prob=10, dataset_type="credit", experiment_name="mut_10_credit")
-    learn(mutation_prob=20, dataset_type="credit", experiment_name="mut_20_credit")
-    learn(mutation_prob=30, dataset_type="credit", experiment_name="mut_30_credit")
+    # #FOURTH DATASET
+    # learn(mutation_prob=10, dataset_type="credit", experiment_name="mut_10_credit")
+    # learn(mutation_prob=20, dataset_type="credit", experiment_name="mut_20_credit")
+    # learn(mutation_prob=30, dataset_type="credit", experiment_name="mut_30_credit")
 
 
 # Trade off Population size vs number of evolution steps
@@ -77,10 +77,10 @@ def experiment_3():
     learn(populationSize=50, max_evolutionary_steps=20,  dataset_type="hardness", experiment_name="avgpop_avgsteps_hardness") # average pop size, average max evolutionary steps 
     learn(populationSize=10, max_evolutionary_steps=100, dataset_type="hardness", experiment_name="lowpop_highsteps_hardness") # low pop size, high max evolutionary steps 
 
-    #FOURTH DATASET
-    learn(populationSize=200, max_evolutionary_steps=5, dataset_type="credit", experiment_name="highpop_lowsteps_credit") # high pop size, low max evolutionary steps 
-    learn(populationSize=50, max_evolutionary_steps=20,  dataset_type="credit", experiment_name="avgpop_avgsteps_credit") # average pop size, average max evolutionary steps 
-    learn(populationSize=10, max_evolutionary_steps=100, dataset_type="credit", experiment_name="lowpop_highsteps_credit") # low pop size, high max evolutionary steps 
+    # #FOURTH DATASET
+    # learn(populationSize=200, max_evolutionary_steps=5, dataset_type="credit", experiment_name="highpop_lowsteps_credit") # high pop size, low max evolutionary steps 
+    # learn(populationSize=50, max_evolutionary_steps=20,  dataset_type="credit", experiment_name="avgpop_avgsteps_credit") # average pop size, average max evolutionary steps 
+    # learn(populationSize=10, max_evolutionary_steps=100, dataset_type="credit", experiment_name="lowpop_highsteps_credit") # low pop size, high max evolutionary steps 
 
 # Elitism proportion
 def experiment_4():
@@ -100,10 +100,10 @@ def experiment_4():
     learn(dataset_type="hardness", experiment_name="4_avg_elitism_hardness", populationElitismProportion = 0.2) # high pop size, low max evolutionary steps 
     learn(dataset_type="hardness", experiment_name="4_high_elitism_hardness", populationElitismProportion = 0.5) # high pop size, low max evolutionary steps 
 
-    #FOURTH DATASET
-    learn(dataset_type="credit", experiment_name="4_no_elitism_credit", populationElitismProportion = 0.0) # high pop size, low max evolutionary steps 
-    learn(dataset_type="credit", experiment_name="4_avg_elitism_credit", populationElitismProportion = 0.2) # high pop size, low max evolutionary steps 
-    learn(dataset_type="credit", experiment_name="4_high_elitism_credit", populationElitismProportion = 0.5) # high pop size, low max evolutionary steps 
+    # #FOURTH DATASET
+    # learn(dataset_type="credit", experiment_name="4_no_elitism_credit", populationElitismProportion = 0.0) # high pop size, low max evolutionary steps 
+    # learn(dataset_type="credit", experiment_name="4_avg_elitism_credit", populationElitismProportion = 0.2) # high pop size, low max evolutionary steps 
+    # learn(dataset_type="credit", experiment_name="4_high_elitism_credit", populationElitismProportion = 0.5) # high pop size, low max evolutionary steps 
 
 def experiment_5():
 
@@ -125,7 +125,22 @@ def experiment_5():
     learn(dataset_type="hardness", experiment_name="5_convergence_and_loss_fitness_hardness", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/50) # high pop size, low max evolutionary steps 
     learn(dataset_type="hardness", experiment_name="5_mostly_convergence_time_fitness_hardness", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/10) # high pop size, low max evolutionary steps 
     
+    # #FOURTH DATASET
+    # learn(dataset_type="credit", experiment_name="5_no_convergence_time_fitness_credit", fitness_loss_weight = 1, fitness_epoch_count_weight = 0) # high pop size, low max evolutionary steps 
+    # learn(dataset_type="credit", experiment_name="5_some_convergence_and_loss_fitness_credit", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/100) # high pop size, low max evolutionary steps 
+    # learn(dataset_type="credit", experiment_name="5_convergence_and_loss_fitness_credit", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/50) # high pop size, low max evolutionary steps 
+    # learn(dataset_type="credit", experiment_name="5_mostly_convergence_time_fitness_credit", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/10) # high pop size, low max evolutionary steps 
     
 if __name__ == "__main__":
 
-    experiment_5()
+    # experiment_1()
+    experiment_2()
+    # experiment_3()
+    experiment_4()
+    # experiment_5()
+    
+    
+    # TODO:
+    # plot the remaining experiments
+    # get best genetic algorithm parameters from slides, run with those parameters until convergence
+    # compare the performance of this model (loss/epoch curve) with the baseline model 
