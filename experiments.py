@@ -9,6 +9,8 @@ from learn import learn
 # 7 - our algorithm vs. hyperparameter grid search baseline (number of epochs until a certain loss is found)
 # 8 - Plot fitness for specific hyper params (genes)
 
+# time based 
+
 # Genome templates
 def experiment_1():
 
@@ -123,16 +125,7 @@ def experiment_5():
     learn(dataset_type="hardness", experiment_name="5_convergence_and_loss_fitness_hardness", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/50) # high pop size, low max evolutionary steps 
     learn(dataset_type="hardness", experiment_name="5_mostly_convergence_time_fitness_hardness", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/10) # high pop size, low max evolutionary steps 
     
-    #FOURTH DATASET
-    learn(dataset_type="credit", experiment_name="5_no_convergence_time_fitness_credit", fitness_loss_weight = 1, fitness_epoch_count_weight = 0) # high pop size, low max evolutionary steps 
-    learn(dataset_type="credit", experiment_name="5_some_convergence_and_loss_fitness_credit", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/100) # high pop size, low max evolutionary steps 
-    learn(dataset_type="credit", experiment_name="5_convergence_and_loss_fitness_credit", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/50) # high pop size, low max evolutionary steps 
-    learn(dataset_type="credit", experiment_name="5_mostly_convergence_time_fitness_credit", fitness_loss_weight = 1, fitness_epoch_count_weight = 1/10) # high pop size, low max evolutionary steps 
     
 if __name__ == "__main__":
 
-    experiment_1()
-    experiment_2()
-    experiment_3()
-    experiment_4()
     experiment_5()
