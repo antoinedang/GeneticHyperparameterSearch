@@ -24,6 +24,14 @@ GENOTYPE_TEMPLATES = [
      'batch_size': False,
      'dropout': False,
      'activation': True,
+     'learning_rate_decay': False},
+     
+     # GENE 3
+     {'learning_rate': False, 
+     'hidden_layers': False, 
+     'batch_size': False,
+     'dropout': False,
+     'activation': False,
      'learning_rate_decay': False}
 ]
 

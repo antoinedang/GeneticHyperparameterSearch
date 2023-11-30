@@ -2,6 +2,7 @@ from population import Population
 from data_preprocessing import Dataset
 from genes import Genes
 from utils import *
+from individual import Individual
 
 def learn(populationSize = 50,
           populationElitismProportion = 0.2,
@@ -58,7 +59,7 @@ def learn(populationSize = 50,
     population_fitness = abs(population.evaluatePopulation())
     num_evolutionary_steps = 0
     best_population_fitness = population_fitness
-    optimalIndividual = None
+    best_genotype = None
     current_evolutionary_patience = 0
     stopped_early = False
 
@@ -77,7 +78,7 @@ def learn(populationSize = 50,
         # EARLY STOPPING UPDATE PATIENCE
         if population_fitness < best_population_fitness:
             best_population_fitness = population_fitness
-            optimalIndividual = population.getOptimalIndividual()
+            best_genotype = population.getOptimalIndividual().genes
             current_evolutionary_patience = 0
         else:
             current_evolutionary_patience += 1
@@ -94,15 +95,15 @@ def learn(populationSize = 50,
         print("Evolution stopped early.               ")
         
     if trackOptimalTestLoss:
+        optimalIndividual = Individual(dataset.isClassification, dataset.inputSize, dataset.outputSize, gene_class, genes=best_genotype)
         optimalIndividual.getFitness(maxEpochsPerIndividual, dataset.train_input, dataset.train_output, dataset.test_input, dataset.test_output, max_patience, fitness_loss_weight, fitness_epoch_count_weight, track_training=True, file_to_append_to="experiment_results/" + experiment_name)
         
-    best_population_genotype = optimalIndividual.genes
-    print("Optimal genes: {}           ".format(best_population_genotype))
+    print("Optimal genes: {}           ".format(best_genotype))
     print("Optimal fitness: {}                 ".format(best_population_fitness))
 
 
     appendToFile("experiment_results/" + experiment_name, "\nEVOLUTION ENDED\n")
-    appendToFile("experiment_results/" + experiment_name, "Optimal genes: {}           ".format(best_population_genotype))
+    appendToFile("experiment_results/" + experiment_name, "Optimal genes: {}           ".format(best_genotype))
     appendToFile("experiment_results/" + experiment_name, "Optimal fitness: {}                 ".format(best_population_fitness))
 
 if __name__ == "__main__":
